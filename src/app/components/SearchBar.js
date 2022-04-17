@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 const SearchBar = (props) => {
   const [term, setTerm] = useState("");
@@ -8,7 +9,11 @@ const SearchBar = (props) => {
   const searchHandler = (event) => {
     event.preventDefault();
     if (term === "") {
-      window.alert("Please enter all search data");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Please enter all search data",
+      });
       return;
     }
     const params = {
@@ -37,7 +42,7 @@ const SearchBar = (props) => {
           value="musicVideo"
           checked={entity === "musicVideo" && "checked"}
           onChange={(e) => setEntity(e.target.value)}
-        />{" "}
+        />
         Video
         <input
           type="radio"
@@ -46,7 +51,7 @@ const SearchBar = (props) => {
           value="musicTrack"
           checked={entity === "musicTrack" && "checked"}
           onChange={(e) => setEntity(e.target.value)}
-        />{" "}
+        />
         Audio
         <label className="ml-2 text-dark">Limit: </label>
         <input

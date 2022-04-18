@@ -1,3 +1,4 @@
+import { Form, FormField, Header, RadioButtonGroup, TextInput } from "grommet";
 import { useState } from "react";
 import Swal from "sweetalert2";
 
@@ -24,50 +25,32 @@ const SearchBar = (props) => {
     props.searchSong(params);
   };
   return (
-    <div className="my-4 text-primary">
-      <form className="form-inline" onSubmit={searchHandler}>
-        <label className="ml-2 text-dark">Term: </label>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Search Term"
-          onChange={(e) => setTerm(e.target.value)}
-          value={term}
-        />
-        <label className="ml-2 text-dark">Entity:</label>
-        <input
-          type="radio"
-          className="form-check-input mx-1"
-          name="rdEntity"
-          value="musicVideo"
-          checked={entity === "musicVideo" && "checked"}
-          onChange={(e) => setEntity(e.target.value)}
-        />
-        Video
-        <input
-          type="radio"
-          className="form-check-input mx-1"
-          name="rdEntity"
-          value="musicTrack"
-          checked={entity === "musicTrack" && "checked"}
-          onChange={(e) => setEntity(e.target.value)}
-        />
-        Audio
-        <label className="ml-2 text-dark">Limit: </label>
+    <div>
+      <Form onSubmit={searchHandler}>
+        <FormField label="Term" value={term}>
+          <TextInput
+            placeholder="search ....."
+            onChange={(e) => setTerm(e.target.value)}
+          />
+        </FormField>
+        <FormField label="Entity">
+          <RadioButtonGroup
+            options={["musicVideo", "musicTrack"]}
+            value={entity}
+            onChange={(e) => setEntity(e.target.value)}
+          />
+        </FormField>
+
+        <label>Limit: </label>
         <input
           type="number"
-          className="form-control"
           min={1}
           max={50}
           onChange={(e) => setLimit(e.target.value)}
           value={limit}
         />
-        <input
-          type="submit"
-          value="Search"
-          className="btn btn-outline-primary mx-1"
-        />
-      </form>
+        <input type="submit" value="Search" />
+      </Form>
     </div>
   );
 };

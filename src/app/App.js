@@ -2,7 +2,7 @@ import SearchBar from "./components/SearchBar";
 import Home from "./Home";
 import MusicPreview from "./components/MusicPreview";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import { Swal } from "sweetalert2";
 import FadeIn from "react-fade-in";
@@ -16,15 +16,15 @@ import {
   Header,
   Heading,
   Box,
+  ResponsiveContext,
+  Spinner,
 } from "grommet";
-
-// import { Icons } from "grommet-icons";
 
 const App = () => {
   const [songs, setSongs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
   const [count, setCount] = useState(0);
+  const size = useContext(ResponsiveContext);
 
   const searchSong = (params) => {
     setIsLoading(true);
@@ -38,7 +38,6 @@ const App = () => {
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
-        // console.log("2nd", data);
         setCount(data.resultCount);
         setSongs(data.results);
         setIsLoading(false);
@@ -58,39 +57,41 @@ const App = () => {
     <Page kind="narrow">
       <PageContent>
         <FadeIn>
-          <Grid
-            rows={["xxsmall", "xsmall"]}
-            columns={["xsmall", "small"]}
-            areas={[
-              { name: "nav", start: [0, 1], end: [0, 1] },
-              { name: "main", start: [1, 1], end: [1, 1] },
-            ]}
+          <Box
+            direction={size == "small" ? "column" : "row"}
+            justify="between"
+            align="center"
+            pad={{ vertical: "20px" }}
           >
-            <Box gridArea="nav">
-              <img src={logo} width={100} height={100} />
+            <img src={logo} width={100} height={100} />
+            <Box align={size == "small" ? "start" : "end"}>
+              <Heading>KiatTune</Heading>
+              <p>Apple iTunes preview web app by Kiattiphoom Pho0m</p>
             </Box>
-            <Box gridArea="main">
-              <Header>
-                <Heading>KiatTune</Heading>
-              </Header>
-            </Box>
-          </Grid>
-          <Paragraph>
-            Apple iTunes preview web app by Kiattiphoom Pho0m
-          </Paragraph>
+          </Box>
         </FadeIn>
       </PageContent>
       <PageContent>
-        <SearchBar searchSong={searchSong} />
-        <h4 className="text-info">Total track found: {count}</h4>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home songs={songs} />} />
-            <Route path="/preview" element={<MusicPreview />} />
-          </Routes>
-        </BrowserRouter>
+        <FadeIn>
+          <SearchBar searchSong={searchSong} />
+          <h4 className="text-info">Total track found: {count}</h4>
+
+          {isLoading ? (
+            <Box width="100%" height="50vh" justify="center" align="center">
+              <Spinner />
+            </Box>
+          ) : (
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Home songs={songs} />} />
+                <Route path="/preview" element={<MusicPreview />} />
+              </Routes>
+            </BrowserRouter>
+          )}
+        </FadeIn>
       </PageContent>
     </Page>
   );
 };
+
 export default App;
